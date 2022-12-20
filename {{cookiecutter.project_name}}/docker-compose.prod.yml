@@ -1,0 +1,114 @@
+version: '3'
+
+volumes:
+  postgres_data:
+
+services:
+{%- if cookiecutter.nginx == 'y' %}
+  nginx:
+    container_name: nginx
+    restart: always
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    depends_on:
+      - django
+{%- if cookiecutter.websockets == 'y' %}
+      - daphne
+{%- endif %}
+    ports:
+      - 80:80
+{%- endif %}
+{% if cookiecutter.websockets == 'y' %}
+  daphne:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+      args:
+        MODE: "--without dev"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - REDIS_URL=${REDIS_URL}
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - DJANGO_EMAIL_HOST_USER=${DJANGO_EMAIL_HOST_USER}
+      - DJANGO_EMAIL_HOST_PASSWORD=${DJANGO_EMAIL_HOST_PASSWORD}
+    expose:
+      - 8080
+    command: daphne -b 0.0.0.0 -p 8080 config.asgi:application
+{% endif %}
+  django:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+      args:
+        MODE: "--without dev"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - REDIS_URL=${REDIS_URL}
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - DJANGO_EMAIL_HOST_USER=${DJANGO_EMAIL_HOST_USER}
+      - DJANGO_EMAIL_HOST_PASSWORD=${DJANGO_EMAIL_HOST_PASSWORD}
+    expose:
+      - 8000
+    command: gunicorn config.wsgi -c ./config/gunicorn.py
+
+  postgres:
+    container_name: postgresql
+    restart: always
+    image: postgres:14.4
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./dumps:/dumps
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+{% if cookiecutter.celery == 'y' or cookiecutter.websockets == 'y' %}
+  redis:
+    container_name: redis
+    restart: always
+    image: redis:6
+    expose:
+      - 6379
+{% endif %}
+{%- if cookiecutter.celery == 'y' %}
+  celery:
+    container_name: celery
+    restart: always
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+      args:
+        MODE: "--without dev"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - REDIS_URL=${REDIS_URL}
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    command: celery --app config.celery:app worker --beat --scheduler=django --loglevel=info
+{% endif %}
+  postgres-backup:
+    image: rmiddle/pg_dump:latest
+    container_name: postgres-backup
+    links:
+      - postgres
+    environment:
+      - PGUSER=${POSTGRES_USER}
+      - PGPASSWORD=${POSTGRES_PASSWORD}
+      - PGDB=${POSTGRES_DB}
+      - PGHOST=${POSTGRES_HOST}
+      - CRON_SCHEDULE=0 0 * * 0
+      - DELETE_OLDER_THAN=1
+    volumes:
+      - ./dumps:/dump
+    command: dump-cron

@@ -1,0 +1,11 @@
+{
+    "project_name": "My project",
+    "project_slug": "my_project",
+    "author": "ZZaRRyaDD",
+    "email": "example@gmail.com",
+    "description": "My new django project",
+    "timezone": "Asia/Krasnoyarsk",
+    "websockets": ["y", "n"],
+    "nginx": ["y", "n"],
+    "celery": ["y", "n"]
+}

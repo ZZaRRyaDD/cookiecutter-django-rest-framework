@@ -1,0 +1,65 @@
+version: '3'
+
+volumes:
+  postgres_data:
+
+services:
+  django:
+    container_name: django
+    restart: always
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+      args:
+        MODE: "--with dev"
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./server:/server
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - REDIS_URL=${REDIS_URL}
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver 0.0.0.0:8000
+
+  postgres:
+    container_name: postgresql
+    restart: always
+    image: postgres:14.4
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./dumps:/dumps
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+{% if cookiecutter.celery == 'y' or cookiecutter.websockets == 'y' %}
+  redis:
+    container_name: redis
+    restart: always
+    image: redis:6
+    expose:
+      - 6379
+{% endif %}
+{%- if cookiecutter.celery == 'y' %}
+  celery:
+    container_name: celery
+    restart: always
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+      args:
+        MODE: "--with dev"
+    depends_on:
+      - redis
+      - postgres
+    ports: []
+    environment:
+      - REDIS_URL=${REDIS_URL}
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    command: celery --app config.celery:app worker --beat --scheduler=django --loglevel=debug
+{% endif %}

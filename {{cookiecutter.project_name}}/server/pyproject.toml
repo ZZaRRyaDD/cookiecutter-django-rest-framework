@@ -1,0 +1,56 @@
+[tool.poetry]
+name = "{{cookiecutter.project_slug}}"
+version = "0.1.0"
+description = "{{cookiecutter.description}}"
+authors = ["{{cookiecutter.author}} <{{cookiecutter.email}}>"]
+
+[tool.poetry.dependencies]
+python = "^3.10.5"
+invoke = "1.7.3"
+rich = "12.6.0"
+ipdb = "0.13.9"
+Werkzeug = "2.2.2"
+watchfiles = "0.16.1"
+Pillow = "9.3.0"
+django = "3.2.16"
+{%- if cookiecutter.celery == 'y' or cookiecutter.websockets == 'y' %}
+redis = "4.3.5"
+django-redis = "5.2.0"
+{%- endif %}
+{%- if cookiecutter.celery == 'y' %}
+celery = "5.2.7"
+django-celery-beat = "2.4.0"
+{%- endif %}
+django-model-utils = "4.3.1"
+djangorestframework = "3.13.1"
+django-cors-headers = "3.13.0"
+drf-spectacular = "0.22.1"
+psycopg2-binary = "2.9.5"
+django-filter = "22.1"
+gunicorn = "20.1.0"
+django-extensions = "3.2.1"
+dj-database-url = "1.0.0"
+drf-yasg = "1.21.4"
+djangorestframework-simplejwt = "4.8.0"
+{%- if cookiecutter.websockets == 'y' %}
+channels = {extras = ["daphne"], version = "4.0.0"}
+channels-redis = "4.0.0"
+{%- endif %}
+
+[tool.poetry.group.dev.dependencies]
+django-stubs = "1.13.0"
+pytest = "7.2.0"
+pytest-sugar = "0.9.6"
+pytest-django = "4.5.2"
+djangorestframework-stubs = "1.8.0"
+flake8 = "4.0.1"
+flake8-isort = "4.2.0"
+coverage = "6.5.0"
+factory-boy = "3.2.1"
+django-debug-toolbar = "3.7.0"
+django-coverage-plugin = "2.0.4"
+pre-commit = "2.20.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -23,6 +23,10 @@ pip install rich invoke
 
     $ inv tests.pytest
 
+#### Running pinters - flake8, isort
+
+    $ inv linters.all
+
 {%- if cookiecutter.celery == "y" %}
 
 ### Celery

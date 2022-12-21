@@ -13,10 +13,8 @@ Werkzeug = "2.2.2"
 watchfiles = "0.16.1"
 Pillow = "9.3.0"
 django = "3.2.16"
-{%- if cookiecutter.celery == 'y' or cookiecutter.websockets == 'y' %}
 redis = "4.3.5"
 django-redis = "5.2.0"
-{%- endif %}
 {%- if cookiecutter.celery == 'y' %}
 celery = "5.2.7"
 django-celery-beat = "2.4.0"

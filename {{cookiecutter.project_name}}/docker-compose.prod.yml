@@ -28,14 +28,10 @@ services:
         MODE: "--without dev"
     depends_on:
       - postgres
-{%- if cookiecutter.celery == 'y' or cookiecutter.websockets == 'y' %}
       - redis
-{%- endif %}
     environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-{%- if cookiecutter.celery == 'y' or cookiecutter.websockets == 'y' %}
       - REDIS_URL=${REDIS_URL}
-{%- endif %}
       - DJANGO_DEBUG=${DJANGO_DEBUG}
       - DJANGO_EMAIL_HOST_USER=${DJANGO_EMAIL_HOST_USER}
       - DJANGO_EMAIL_HOST_PASSWORD=${DJANGO_EMAIL_HOST_PASSWORD}
@@ -51,14 +47,10 @@ services:
         MODE: "--without dev"
     depends_on:
       - postgres
-{%- if cookiecutter.celery == 'y' or cookiecutter.websockets == 'y' %}
       - redis
-{%- endif %}
     environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-{%- if cookiecutter.celery == 'y' or cookiecutter.websockets == 'y' %}
       - REDIS_URL=${REDIS_URL}
-{%- endif %}
       - DJANGO_DEBUG=${DJANGO_DEBUG}
       - DJANGO_EMAIL_HOST_USER=${DJANGO_EMAIL_HOST_USER}
       - DJANGO_EMAIL_HOST_PASSWORD=${DJANGO_EMAIL_HOST_PASSWORD}
@@ -79,14 +71,13 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-{% if cookiecutter.celery == 'y' or cookiecutter.websockets == 'y' %}
+
   redis:
     container_name: redis
     restart: always
     image: redis:6
     expose:
       - 6379
-{% endif %}
 {%- if cookiecutter.celery == 'y' %}
   celery:
     container_name: celery

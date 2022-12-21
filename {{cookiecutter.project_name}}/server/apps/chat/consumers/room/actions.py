@@ -6,7 +6,7 @@ from .services import UserService
 class RoomActionsMixin:
 
     async def user_list(self) -> None:
-        users = await UserQueries.get_users_list(self.event_id)
+        users = await UserQueries.get_users_list()
         body = {"users": await UserService.get_users_list(users)}
         await self.response_to_user(Events.EVENT_USERS_RETRIEVE, body)
 

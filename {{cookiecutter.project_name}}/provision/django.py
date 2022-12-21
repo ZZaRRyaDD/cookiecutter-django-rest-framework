@@ -18,14 +18,14 @@ def manage(context, service="django", command="", compose="dev"):
 def makemigrations(context, command=""):
     """Run makemigrations command and chown created migrations."""
     common.success("Django: Make migrations")
-    manage(context, f"makemigrations {command}")
+    manage(context, command=f"makemigrations {command}")
 
 
 @task
 def migrate(context, app_name=""):
     """Run ``migrate`` command."""
     common.success("Django: Apply migrations")
-    manage(context, f"migrate {app_name}")
+    manage(context, command=f"migrate {app_name}")
 
 
 @task

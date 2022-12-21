@@ -29,6 +29,10 @@ def set_variable(value, place, path):
 def main():
     if "{{cookiecutter.websockets}}" == "n":
         os.remove("./server/config/routing.py")
+        shutil.rmtree("./server/apps/chat")
+        shutil.rmtree("./server/apps/core/consumer")
+        shutil.rmtree("./server/apps/core/middleware")
+        shutil.rmtree("./server/apps/core/mixins")
 
     if "{{cookiecutter.nginx}}" == "n":
         shutil.rmtree("./nginx")

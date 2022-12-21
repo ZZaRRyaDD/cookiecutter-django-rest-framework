@@ -4,7 +4,6 @@ volumes:
   postgres_data:
 
 services:
-{%- if cookiecutter.nginx == 'y' %}
   nginx:
     container_name: nginx
     restart: always
@@ -18,7 +17,6 @@ services:
 {%- endif %}
     ports:
       - 80:80
-{%- endif %}
 {% if cookiecutter.websockets == 'y' %}
   daphne:
     build:

@@ -34,10 +34,6 @@ def main():
         shutil.rmtree("./server/apps/core/middleware")
         shutil.rmtree("./server/apps/core/mixins")
 
-    if "{{cookiecutter.nginx}}" == "n":
-        shutil.rmtree("./nginx")
-        os.remove("./server/config/gunicorn.py")
-
     if "{{cookiecutter.celery}}" == "n":
         os.remove("./server/config/celery.py")
         os.remove("./server/config/settings/celery.py")

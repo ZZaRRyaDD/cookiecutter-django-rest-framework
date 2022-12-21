@@ -31,6 +31,9 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "apps.core.apps.CoreConfig",
+{%- if cookiecutter.websockets == 'y' %}
+    "apps.chat.apps.ChatConfig",
+{%- endif %}
     "apps.users.apps.UsersConfig",
 ]
 

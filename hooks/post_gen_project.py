@@ -36,6 +36,7 @@ def main():
 
     if "{{cookiecutter.nginx}}" == "n":
         shutil.rmtree("./nginx")
+        os.remove("./server/config/gunicorn.py")
 
     if "{{cookiecutter.celery}}" == "n":
         os.remove("./server/config/celery.py")

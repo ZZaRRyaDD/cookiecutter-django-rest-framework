@@ -14,12 +14,16 @@ services:
         MODE: "--with dev"
     depends_on:
       - postgres
+{%- if cookiecutter.celery == 'y' or cookiecutter.websockets == 'y' %}
       - redis
+{%- endif %}
     volumes:
       - ./server:/server
     environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+{%- if cookiecutter.celery == 'y' or cookiecutter.websockets == 'y' %}
       - REDIS_URL=${REDIS_URL}
+{%- endif %}
     ports:
       - "8000:8000"
     command: python manage.py runserver 0.0.0.0:8000

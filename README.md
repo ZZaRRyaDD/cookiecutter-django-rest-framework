@@ -17,7 +17,6 @@ production-ready DjangoRestFramework projects quickly.
 
 -   Configuration for [Celery](https://docs.celeryq.dev)
 -   Configuration for Django-Channels with Daphne
--   Configuration nginx
 
 ## Usage
 
@@ -43,10 +42,6 @@ Answer the prompts with your own desired options. For example:
     description [My new django project]:
     timezone [UTC]: Asia/Krasnoyarsk
     Select websockets:
-    1 - y
-    2 - n
-    Choose from 1, 2 [1]: 1
-    Select nginx:
     1 - y
     2 - n
     Choose from 1, 2 [1]: 1

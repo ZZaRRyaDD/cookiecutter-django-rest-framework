@@ -13,8 +13,8 @@ router.register("users", UserViewSet, basename="users")
 
 app_name = "api"
 urlpatterns = router.urls + [
-    path("schema/", SpectacularAPIView.as_view(), name="api-schema"),
-    path("docs/", SpectacularSwaggerView.as_view(url_name="api-schema"), name="api-docs"),
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("docs/", SpectacularSwaggerView.as_view(url_name="api:schema"), name="api-docs"),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

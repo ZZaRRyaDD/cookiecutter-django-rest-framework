@@ -5,6 +5,7 @@ class PaginationObject(pagination.PageNumberPagination):
     """Class for paginate object."""
 
     page_size_query_param = 'page_size'
+    page_size = 9
 
     def get_paginated_response(self, data):
         """Overriden for get links on previous and next pages."""

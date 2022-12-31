@@ -12,12 +12,12 @@ services:
       dockerfile: ./nginx/Dockerfile
     depends_on:
       - django
-{%- if cookiecutter.websockets == 'y' %}
+{%- if cookiecutter.websockets != 'n' %}
       - daphne
 {%- endif %}
     ports:
       - 80:80
-{% if cookiecutter.websockets == 'y' %}
+{% if cookiecutter.websockets != 'n' %}
   daphne:
     build:
       context: .
@@ -76,7 +76,7 @@ services:
     image: redis:6
     expose:
       - 6379
-{% if cookiecutter.celery == 'y' %}
+{% if cookiecutter.celery != 'n' %}
   celery:
     container_name: celery
     restart: always

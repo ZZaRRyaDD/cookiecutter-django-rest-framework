@@ -1,5 +1,5 @@
 from .drf import *
-{%- if cookiecutter.celery == 'y' %}
+{%- if cookiecutter.celery != 'n' %}
 from .celery import *
 {%- endif %}
 from .email import *

@@ -1,5 +1,5 @@
 import os
-{% if cookiecutter.websockets == 'y' %}
+{% if cookiecutter.websockets != 'n' %}
 import django
 from channels.routing import get_default_application
 

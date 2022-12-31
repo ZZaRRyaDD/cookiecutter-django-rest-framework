@@ -8,14 +8,13 @@ production-ready DjangoRestFramework projects quickly.
 -   For Django 3.2.16
 -   Works with Python 3.10
 -   Optional basic ASGI setup for Websockets
--   Docker support using [docker-compose](https://github.com/docker/compose) for development and production
--   Default integration with [pre-commit](https://github.com/pre-commit/pre-commit) for identifying simple issues before submission to code review
+-   Docker support using docker-compose for development and production
 
 ## Optional Integrations
 
 *These features can be enabled during initial project setup.*
 
--   Configuration for [Celery](https://docs.celeryq.dev)
+-   Configuration for Celery
 -   Configuration for Django-Channels with Daphne
 
 ## Usage
@@ -41,13 +40,9 @@ Answer the prompts with your own desired options. For example:
     email [example@gmail.com]:
     description [My new django project]:
     timezone [UTC]: Asia/Krasnoyarsk
-    Select websockets:
-    1 - y
-    2 - n
-    Choose from 1, 2 [1]: 1
-    Select celery:
-    1 - y
-    2 - n
-    Choose from 1, 2 [1]: 1
+    websockets [n]:
+    celery [n]:
+    autodeploy [n]:
+
 
 Now take a look at your repo. Don't forget to carefully look at the generated README. Awesome, right?

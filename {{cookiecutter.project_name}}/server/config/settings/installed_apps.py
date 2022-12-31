@@ -12,7 +12,7 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-{%- if cookiecutter.websockets == 'y' %}
+{%- if cookiecutter.websockets != 'n' %}
     "daphne",
     "django.contrib.staticfiles",
 {%- endif %}
@@ -20,7 +20,7 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-{%- if cookiecutter.celery == 'y' %}
+{%- if cookiecutter.celery != 'n' %}
     "django_celery_beat",
 {%- endif %}
     "corsheaders",
@@ -31,7 +31,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "apps.core.apps.CoreConfig",
-{%- if cookiecutter.websockets == 'y' %}
+{%- if cookiecutter.websockets != 'n' %}
     "apps.chat.apps.ChatConfig",
 {%- endif %}
     "apps.users.apps.UsersConfig",

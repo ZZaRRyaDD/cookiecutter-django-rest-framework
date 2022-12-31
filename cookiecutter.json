@@ -5,6 +5,7 @@
     "email": "example@gmail.com",
     "description": "My new django project",
     "timezone": "Asia/Krasnoyarsk",
-    "websockets": ["y", "n"],
-    "celery": ["y", "n"]
+    "websockets": "n",
+    "celery": "n",
+    "autodeploy": "n"
 }

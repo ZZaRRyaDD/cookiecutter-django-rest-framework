@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Executing remote command
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          # Set variables from below in github secrets
+          host:
+          username:
+          port:
+          key:
+          script: |
+            cd
+            sudo git pull --rebase origin develop
+            docker-compose -f docker-compose.prod.yml stop
+            docker-compose -f docker-compose.prod.yml up -d --build

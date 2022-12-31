@@ -25,7 +25,7 @@ USE_L10N = True
 USE_TZ = True
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
-{%- if cookiecutter.websockets == 'y' %}
+{%- if cookiecutter.websockets != 'n' %}
 ASGI_APPLICATION = 'config.routing.application'
 {%- endif %}
 
@@ -45,7 +45,7 @@ CACHES = {
         },
     }
 }
-{% if cookiecutter.websockets == 'y' %}
+{% if cookiecutter.websockets != 'n' %}
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',

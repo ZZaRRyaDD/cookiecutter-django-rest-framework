@@ -44,7 +44,7 @@ services:
     image: redis:6
     expose:
       - 6379
-{% if cookiecutter.celery == 'y' %}
+{% if cookiecutter.celery != 'n' %}
   celery:
     container_name: celery
     restart: always

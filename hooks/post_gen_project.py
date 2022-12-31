@@ -38,6 +38,9 @@ def main():
         os.remove("./server/config/celery.py")
         os.remove("./server/config/settings/celery.py")
 
+    if "{{cookiecutter.autodeploy}}" == "n":
+        os.remove("./.github/workflows/deploy.yml")
+
     set_variable(
         f"{generate_value()}/\n",
         "SET_DJANGO_ADMIN_URL",

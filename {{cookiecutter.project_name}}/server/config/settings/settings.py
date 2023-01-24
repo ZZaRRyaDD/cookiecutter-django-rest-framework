@@ -3,8 +3,6 @@ from pathlib import Path
 
 import dj_database_url
 
-from .installed_apps import INSTALLED_APPS
-
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 

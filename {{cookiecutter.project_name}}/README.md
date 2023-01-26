@@ -2,7 +2,7 @@
 
 {{ cookiecutter.description }}
 
-[Built with Cookiecutter DjangoRestFrameowrk](https://github.com/PC-Nazarka/cookiecutter-django-rest-framework/)
+[Built with Cookiecutter DjangoRestFramework](https://github.com/PC-Nazarka/cookiecutter-django-rest-framework/)
 
 ## Basic Commands
 
@@ -13,16 +13,22 @@ pip install rich invoke
 ```
 
 ### Setting Up Your Users
+To create a **superuser account**, use this command:
 
--   To create a **superuser account**, use this command:
+```bash
+inv django.createsuperuser
+```
 
-        $ inv django.createsuperuser
-    By default have account with username admin, password admin, email admin@admin.com
+By default have account with username admin, password admin, email admin@admin.com
 
 #### Running tests with pytest
 
-    $ inv tests.pytest
+```bash
+inv tests.pytest
+```
 
-#### Running pinters - flake8, isort
+#### Running linters - flake8, isort
 
-    $ inv linters.all
+```bash
+inv linters.all
+```

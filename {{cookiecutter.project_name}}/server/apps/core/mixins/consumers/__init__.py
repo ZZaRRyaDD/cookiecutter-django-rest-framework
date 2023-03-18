@@ -1,1 +1,5 @@
-from .action_handler import ActionHandlerMixin  # noqa F401
+from .action_handler import ActionHandlerMixin
+
+__all__ = (
+    ActionHandlerMixin,
+)

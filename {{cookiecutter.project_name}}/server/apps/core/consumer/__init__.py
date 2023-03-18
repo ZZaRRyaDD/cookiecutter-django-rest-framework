@@ -1,1 +1,5 @@
-from .base_consumer import BaseConsumer  # noqa F401
+from .base_consumer import BaseConsumer
+
+__all__ = (
+    BaseConsumer,
+)

@@ -6,9 +6,6 @@ authors = ["{{cookiecutter.author}} <{{cookiecutter.email}}>"]
 
 [tool.poetry.dependencies]
 python = "^3.10.5"
-invoke = "1.7.3"
-rich = "12.6.0"
-ipdb = "0.13.9"
 Werkzeug = "2.2.2"
 watchfiles = "0.16.1"
 Pillow = "9.3.0"
@@ -22,13 +19,10 @@ django-celery-beat = "2.4.0"
 django-model-utils = "4.3.1"
 djangorestframework = "3.13.1"
 django-cors-headers = "3.13.0"
-drf-spectacular = "0.22.1"
 psycopg2-binary = "2.9.5"
-django-filter = "22.1"
 gunicorn = "20.1.0"
 django-extensions = "3.2.1"
 dj-database-url = "1.0.0"
-drf-yasg = "1.21.4"
 djangorestframework-simplejwt = "4.8.0"
 {%- if cookiecutter.websockets != 'n' %}
 channels = {extras = ["daphne"], version = "4.0.0"}
@@ -43,10 +37,8 @@ pytest-django = "4.5.2"
 djangorestframework-stubs = "1.8.0"
 flake8 = "4.0.1"
 flake8-isort = "4.2.0"
-coverage = "6.5.0"
 factory-boy = "3.2.1"
 django-debug-toolbar = "3.7.0"
-django-coverage-plugin = "2.0.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

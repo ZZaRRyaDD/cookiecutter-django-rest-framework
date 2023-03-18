@@ -1,2 +1,7 @@
-from .email import send_email  # noqa F401
-from .pagination import PaginationObject  # noqa F401
+from .email import send_email
+from .pagination import PaginationObject
+
+__all__ = (
+    send_email,
+    PaginationObject,
+)

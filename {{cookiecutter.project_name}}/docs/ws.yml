@@ -1,0 +1,51 @@
+info:
+  title: {{ cookiecutter.project_slug }}
+  version: 0.1.0
+
+server:
+  url: ws://0.0.0.0:8000/ws/chat/<room_id>/?token=<user_access_token>
+  description: <room_id> - Room with current id.
+
+actions:
+  connect:
+    description: Successful connection to chat.
+    actor:
+      type: object
+      properties:
+        is_system: true
+        description: Connect will be triggered only on connection request and handled by backend.
+    response_to_user:
+      event: room_users_retrieve
+      users:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            username:
+              type: string
+            first_name:
+              type: string
+            last_name:
+              type: string
+
+  send_message:
+    description: Send new message.
+    actor:
+      type: object
+      properties:
+        is_system: false
+        description: Send message.
+    data:
+      type: object
+      properties:
+        message:
+          type: string
+    response_to_group:
+      event: message_new
+      message:
+        type: object
+        properties:
+          message:
+            type: string

@@ -33,6 +33,7 @@ def main():
         shutil.rmtree("./server/apps/core/consumer")
         shutil.rmtree("./server/apps/core/middleware")
         shutil.rmtree("./server/apps/core/mixins")
+        os.remove("./docs/ws.yml")
 
     if "{{cookiecutter.celery}}" == "n":
         os.remove("./server/config/celery.py")

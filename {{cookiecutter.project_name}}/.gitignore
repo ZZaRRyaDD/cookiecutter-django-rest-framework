@@ -7,7 +7,7 @@ celerybeat-schedule
 venv/
 *.log
 coverage
-.vscode/*
+.vscode
 {{cookiecutter.project_slug}}/media/
 .pytest_cache/
 .ipython/

@@ -1,0 +1,198 @@
+openapi: 3.0.2
+
+info:
+  title: {{ cookiecutter.project_slug }}
+  version: 0.1.0
+
+tags:
+  - name: auth
+    description: "Auth namespace"
+  - name: users
+    description: "Users namespace"
+
+paths:
+  "/api/token/":
+    post:
+      tags:
+        - auth
+        - users
+      summary: "Login user"
+      requestBody:
+        $ref: "#/components/requestBodies/TokenPairRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/TokenObtain200"
+        "400":
+          $ref: "#/components/responses/TokenObtain400"
+
+  "/api/token/refresh/":
+    post:
+      tags:
+        - auth
+        - users
+      summary: "Refresh token"
+      requestBody:
+        $ref: "#/components/requestBodies/TokenRefreshRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/TokenRefresh200"
+        "400":
+          $ref: "#/components/responses/TokenRefresh400"
+
+  "/api/users/me/":
+    get:
+      tags:
+        - users
+      summary: "Get info about user from request"
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/User200"
+        "401":
+          description: "Unauthorized"
+
+  "/api/users/":
+    get:
+      tags:
+        - users
+      summary: "Get users list"
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/UserList200"
+        "401":
+          description: "Unauthorized"
+
+  "/api/users/{user_id}/":
+    get:
+      tags:
+        - users
+      summary: "Get user info"
+      parameters:
+        - name: user_id
+          in: path
+          schema:
+            type: number
+          required: true
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/User200"
+        "401":
+          description: "Unauthorized"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UserBase:
+      type: object
+      properties:
+        id:
+          type: number
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+
+  requestBodies:
+    TokenPairRequestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+      required: true
+
+    TokenRefreshRequestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              refresh:
+                type: string
+      required: true
+
+  responses:
+    UserList200:
+      description: "User list"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/UserBase"
+
+    User200:
+      description: "User info"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserBase"
+
+    TokenObtain200:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              access:
+                type: string
+                description: "access token"
+              refresh:
+                type: string
+                description: "refresh token"
+
+    TokenObtain400:
+      description: "Bad request"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "No active account found with the given credentials"
+
+    TokenRefresh200:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              access:
+                type: string
+                description: "access token"
+              refresh:
+                type: string
+                description: "refresh token"
+
+    TokenRefresh400:
+      description: "Bad request"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "Token is invalid or expired"
+              code:
+                type: string
+                example: "token_not_valid"

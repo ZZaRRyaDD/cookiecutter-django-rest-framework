@@ -1,4 +1,4 @@
-from .base_serializer import BaseModelSerializer
+from .base import BaseModelSerializer
 
 __all__ = (
     BaseModelSerializer,

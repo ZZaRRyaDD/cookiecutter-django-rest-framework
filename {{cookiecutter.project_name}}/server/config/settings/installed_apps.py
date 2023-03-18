@@ -24,8 +24,6 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
 {%- endif %}
     "corsheaders",
-    "drf_spectacular",
-    "django_filters",
     "django_extensions",
 ]
 

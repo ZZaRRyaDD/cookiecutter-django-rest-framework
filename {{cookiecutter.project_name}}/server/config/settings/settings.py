@@ -3,7 +3,6 @@ from pathlib import Path
 
 import dj_database_url
 
-
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 
 # GENERAL

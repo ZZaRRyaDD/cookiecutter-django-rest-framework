@@ -2,7 +2,6 @@ import os
 
 from .settings import TIME_ZONE, USE_TZ
 
-
 if USE_TZ:
     CELERY_TIMEZONE = TIME_ZONE
 CELERY_BROKER_URL = os.getenv("REDIS_URL")

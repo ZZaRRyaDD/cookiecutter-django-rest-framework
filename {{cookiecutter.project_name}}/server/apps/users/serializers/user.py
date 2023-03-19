@@ -1,10 +1,12 @@
 from django.contrib.auth.models import User
 
-from apps.core.serializers import BaseModelSerializer
+from apps.core.serializers import BaseModelSerializer, serializers
 
 
 class UserSerializer(BaseModelSerializer):
     """Serializer for User model."""
+
+    password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
@@ -15,6 +17,3 @@ class UserSerializer(BaseModelSerializer):
             "first_name",
             "last_name",
         )
-        extra_kwargs = {
-            "password": {"write_only": True}
-        }

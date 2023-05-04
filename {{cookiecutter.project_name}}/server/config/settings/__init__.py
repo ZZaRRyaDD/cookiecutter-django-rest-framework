@@ -1,4 +1,4 @@
-{% if cookiecutter.celery != 'n' %}
+{%- if cookiecutter.celery != 'n' -%}
 from .celery import *
 {%- endif %}
 from .drf import *

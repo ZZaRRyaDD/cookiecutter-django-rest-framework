@@ -6,8 +6,6 @@ authors = ["{{cookiecutter.author}} <{{cookiecutter.email}}>"]
 
 [tool.poetry.dependencies]
 python = "^3.10.5"
-Werkzeug = "2.2.2"
-watchfiles = "0.16.1"
 Pillow = "9.3.0"
 django = "3.2.16"
 redis = "4.3.5"
@@ -15,6 +13,7 @@ django-redis = "5.2.0"
 {%- if cookiecutter.celery != 'n' %}
 celery = "5.2.7"
 django-celery-beat = "2.4.0"
+flower = "1.2.0"
 {%- endif %}
 django-model-utils = "4.3.1"
 djangorestframework = "3.13.1"

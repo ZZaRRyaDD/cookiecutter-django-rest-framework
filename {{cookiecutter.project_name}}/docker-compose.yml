@@ -60,7 +60,23 @@ services:
     environment:
       - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-    command: celery --app config.celery:app worker --beat --scheduler=django --loglevel=debug
+    command: celery --app=config worker --beat --scheduler=django --loglevel=debug
+
+  flower:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+      args:
+        MODE: "--with dev"
+    command: celery --app=config flower
+    ports:
+      - 5555:5555
+    environment:
+      - CELERY_BROKER_URL=${REDIS_URL}
+      - CELERY_RESULT_BACKEND=${REDIS_URL}
+    depends_on:
+      - celery
+      - redis
 {% endif %}
 {%- if cookiecutter.websockets != 'n' %}
   alexandria:

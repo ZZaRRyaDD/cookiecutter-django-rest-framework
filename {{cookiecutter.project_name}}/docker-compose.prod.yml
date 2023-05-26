@@ -92,7 +92,7 @@ services:
       - REDIS_URL=${REDIS_URL}
       - DJANGO_DEBUG=${DJANGO_DEBUG}
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-    command: celery --app config.celery:app worker --beat --scheduler=django --loglevel=info
+    command: celery --app=config worker --beat --scheduler=django --loglevel=info --logfile=celery.log
 {% endif %}
   postgres-backup:
     image: rmiddle/pg_dump:latest

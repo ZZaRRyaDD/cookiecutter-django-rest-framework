@@ -7,29 +7,31 @@ production-ready DjangoRestFramework projects quickly.
 
 -   For Django 3.2.16
 -   Works with Python 3.10
--   Optional basic ASGI setup for Websockets
 -   Docker support using docker-compose for development and production
 
 ## Optional Integrations
 
 *These features can be enabled during initial project setup.*
 
--   Configuration for Celery
+-   Configuration for Celery, Flower
 -   Configuration for Django-Channels with Daphne
+-   Auth deploy with GitHub Actions
 
 ## Usage
 
-First, get Cookiecutter. Trust me, it's awesome:
+Get Cookiecutter:
 
-    $ pip install "cookiecutter>=1.7.0"
+```bash
+pip install "cookiecutter>=1.7.0"
+```
 
-Now run it against this repo:
+Now run it for generate project with this template:
 
-    $ cookiecutter https://github.com/PC-Nazarka/cookiecutter-django-rest-framework
+```bash
+cookiecutter https://github.com/PC-Nazarka/cookiecutter-django-rest-framework
+```
 
 You'll be prompted for some values. Provide them, then a Django project will be created for you.
-
-**Warning**: After this point, change 'ZZaRRyaDD' etc to your own information.
 
 Answer the prompts with your own desired options. For example:
 
@@ -45,4 +47,4 @@ Answer the prompts with your own desired options. For example:
     autodeploy [n]:
 
 
-Now take a look at your repo. Don't forget to carefully look at the generated README. Awesome, right?
+Now take a look at your repo.

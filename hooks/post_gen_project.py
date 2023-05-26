@@ -2,7 +2,6 @@ import random
 import os
 import shutil
 
-
 DIGITS = "".join([chr(number) for number in range(48, 58)])
 UPPER_LETTERS = "".join([chr(number) for number in range(65, 91)])
 LOWER_LETTERS = UPPER_LETTERS.lower()
@@ -38,6 +37,8 @@ def main():
     if "{{cookiecutter.celery}}" == "n":
         os.remove("./server/config/celery.py")
         os.remove("./server/config/settings/celery.py")
+        os.remove("./server/apps/users/tasks.py")
+        os.remove("./server/apps/users/schedules.py")
 
     if "{{cookiecutter.autodeploy}}" == "n":
         os.remove("./.github/workflows/deploy.yml")

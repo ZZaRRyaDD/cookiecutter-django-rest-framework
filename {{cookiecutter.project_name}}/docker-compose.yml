@@ -5,7 +5,6 @@ volumes:
 
 services:
   django:
-    container_name: django
     restart: always
     build:
       context: .
@@ -25,7 +24,6 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
 
   postgres:
-    container_name: postgresql
     restart: always
     image: postgres:14.4
     volumes:
@@ -39,30 +37,44 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
 
   redis:
-    container_name: redis
     restart: always
     image: redis:6
     expose:
       - 6379
-{% if cookiecutter.celery != 'n' %}
-  celery:
-    container_name: celery
+{% if cookiecutter.celery != 'n' %}  
+  celery_worker:
     restart: always
     build:
       context: .
       dockerfile: ./server/Dockerfile
       args:
         MODE: "--with dev"
+    command: celery --app=config worker --loglevel=DEBUG
     depends_on:
-      - redis
       - postgres
-    ports: []
+      - redis
     environment:
-      - REDIS_URL=${REDIS_URL}
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-    command: celery --app=config worker --beat --scheduler=django --loglevel=debug
+      - REDIS_URL=${REDIS_URL}
+
+  celery_beat:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+      args:
+        MODE: "--with dev"
+    command: celery --app=config beat --scheduler=django --loglevel=DEBUG
+    depends_on:
+      - postgres
+      - redis
+      - celery_worker
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - REDIS_URL=${REDIS_URL}
 
   flower:
+    restart: always
     build:
       context: .
       dockerfile: ./server/Dockerfile
@@ -75,11 +87,14 @@ services:
       - CELERY_BROKER_URL=${REDIS_URL}
       - CELERY_RESULT_BACKEND=${REDIS_URL}
     depends_on:
-      - celery
+      - postgres
       - redis
+      - celery_worker
+      - celery_beat
 {% endif %}
 {%- if cookiecutter.websockets != 'n' %}
   alexandria:
+    restart: always
     image: raisultan/alexandria:0.1
     volumes:
       - ./docs/ws.yml:/ws.yml
@@ -89,7 +104,7 @@ services:
       ALEXANDRIA_YAML: /ws.yml
 {% endif %}
   swagger-editor:
+    restart: always
     image: swaggerapi/swagger-editor
-    container_name: "swagger-editor"
     ports:
       - "8080:8080"

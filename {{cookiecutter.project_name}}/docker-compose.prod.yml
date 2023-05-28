@@ -5,7 +5,6 @@ volumes:
 
 services:
   nginx:
-    container_name: nginx
     restart: always
     build:
       context: .
@@ -38,6 +37,7 @@ services:
     command: daphne -b 0.0.0.0 -p 8080 config.asgi:application
 {% endif %}
   django:
+    restart: always
     build:
       context: .
       dockerfile: ./server/Dockerfile
@@ -57,7 +57,6 @@ services:
     command: gunicorn config.wsgi -c ./config/gunicorn.py
 
   postgres:
-    container_name: postgresql
     restart: always
     image: postgres:14.4
     volumes:
@@ -71,32 +70,46 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
 
   redis:
-    container_name: redis
     restart: always
     image: redis:6
     expose:
       - 6379
-{% if cookiecutter.celery != 'n' %}
-  celery:
-    container_name: celery
+{% if cookiecutter.celery != 'n' %}  
+  celery_worker:
     restart: always
     build:
       context: .
       dockerfile: ./server/Dockerfile
       args:
         MODE: "--without dev"
+    command: celery --app=config worker --loglevel=INFO
     depends_on:
       - postgres
       - redis
     environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
       - REDIS_URL=${REDIS_URL}
       - DJANGO_DEBUG=${DJANGO_DEBUG}
+
+  celery_beat:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+      args:
+        MODE: "--without dev"
+    command: celery --app=config beat --scheduler=django --loglevel=INFO
+    depends_on:
+      - postgres
+      - redis
+    environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-    command: celery --app=config worker --beat --scheduler=django --loglevel=info --logfile=celery.log
+      - REDIS_URL=${REDIS_URL}
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
 {% endif %}
   postgres-backup:
+    restart: always
     image: rmiddle/pg_dump:latest
-    container_name: postgres-backup
     links:
       - postgres
     environment:

@@ -5,7 +5,7 @@ production-ready DjangoRestFramework projects quickly.
 
 ## Features
 
--   For Django 3.2.16
+-   For Django 4.2.1
 -   Works with Python 3.10
 -   Docker support using docker-compose for development and production
 

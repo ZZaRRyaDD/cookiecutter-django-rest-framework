@@ -1,10 +1,11 @@
 from rest_framework import mixins, viewsets
 
 
-class RetrieveUpdateViewSet(
+class CreateRetrieveUpdateViewSet(
+    mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
-    """RetrieveUpdateViewSet for `read`, `list`, `update`."""
+    """CreateRetrieveUpdateViewSet for `create`, `read`, `list`, `update`."""

@@ -1,7 +1,7 @@
 from .base import BaseViewSet
-from .retrieve_update import RetrieveUpdateViewSet
+from .create_retrieve_update import CreateRetrieveUpdateViewSet
 
 __all__ = (
     BaseViewSet,
-    RetrieveUpdateViewSet,
+    CreateRetrieveUpdateViewSet,
 )

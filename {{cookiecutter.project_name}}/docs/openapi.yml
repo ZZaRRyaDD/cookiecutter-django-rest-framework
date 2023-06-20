@@ -65,6 +65,20 @@ paths:
         "401":
           description: "Unauthorized"
 
+    post:
+      tags:
+        - users
+      summary: "Create user"
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/UserCreateRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/User200"
+        "400":
+          $ref: "#/components/responses/User400"
+
   "/api/users/{user_id}/":
     get:
       tags:
@@ -84,6 +98,30 @@ paths:
         "401":
           description: "Unauthorized"
 
+    patch:
+      tags:
+        - users
+      summary: "Update user info"
+      parameters:
+        - name: user_id
+          in: path
+          schema:
+            type: number
+          required: true
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/UserCreateRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/User200"
+        "400":
+          $ref: "#/components/responses/User400"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -102,6 +140,18 @@ components:
         last_name:
           type: string
         username:
+          type: string
+
+    UserCreate:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+        password:
           type: string
 
   requestBodies:
@@ -127,6 +177,13 @@ components:
                 type: string
       required: true
 
+    UserCreateRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserCreate"
+      required: true
+
   responses:
     UserList200:
       description: "User list"
@@ -143,6 +200,9 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/UserBase"
+
+    User400:
+      description: "User create failed"
 
     TokenObtain200:
       description: "Success"

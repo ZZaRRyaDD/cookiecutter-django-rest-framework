@@ -17,3 +17,6 @@ class UserSerializer(BaseModelSerializer):
             "first_name",
             "last_name",
         )
+
+    def create(self, validated_data: dict) -> User:
+        return User.objects.create_user(**validated_data)

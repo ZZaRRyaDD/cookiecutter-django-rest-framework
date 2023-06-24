@@ -8,7 +8,7 @@ venv/
 *.log
 coverage
 .vscode
-{{cookiecutter.project_slug}}/media/
+server/media/
 .pytest_cache/
 .ipython/
 .idea

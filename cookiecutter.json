@@ -6,6 +6,5 @@
     "description": "My new django project",
     "timezone": "Asia/Krasnoyarsk",
     "websockets": "n",
-    "celery": "n",
-    "autodeploy": "n"
+    "celery": "n"
 }

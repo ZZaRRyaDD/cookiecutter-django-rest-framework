@@ -1,2 +1,0 @@
-#!/bin/sh
-inv git.pre-push

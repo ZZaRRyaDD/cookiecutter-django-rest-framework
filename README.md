@@ -44,7 +44,6 @@ Answer the prompts with your own desired options. For example:
     timezone [UTC]: Asia/Krasnoyarsk
     websockets [n]:
     celery [n]:
-    autodeploy [n]:
 
 
 Now take a look at your repo.

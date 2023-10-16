@@ -40,9 +40,6 @@ def main():
         os.remove("./server/apps/users/tasks.py")
         os.remove("./server/apps/users/schedules.py")
 
-    if "{{cookiecutter.autodeploy}}" == "n":
-        os.remove("./.github/workflows/deploy.yml")
-
     set_variable(
         f"{generate_value()}/\n",
         "SET_DJANGO_ADMIN_URL",

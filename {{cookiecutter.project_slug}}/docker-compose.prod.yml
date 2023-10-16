@@ -5,49 +5,36 @@ volumes:
 
 services:
   nginx:
+    container_name: nginx
     restart: always
     build:
       context: .
       dockerfile: ./nginx/Dockerfile
     depends_on:
       - django
+      - swagger-ui
 {%- if cookiecutter.websockets != 'n' %}
       - daphne
+      - alexandria
 {%- endif %}
     ports:
       - 80:80
 {% if cookiecutter.websockets != 'n' %}
   daphne:
-    build:
-      context: .
-      dockerfile: ./server/Dockerfile
-      args:
-        MODE: "--without dev"
-    depends_on:
-      - postgres
-      - redis
-    environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-      - REDIS_URL=${REDIS_URL}
-      - DJANGO_DEBUG=${DJANGO_DEBUG}
-      - DJANGO_ADMIN_URL=${DJANGO_ADMIN_URL}
-      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-      - DJANGO_EMAIL_HOST_USER=${DJANGO_EMAIL_HOST_USER}
-      - DJANGO_EMAIL_HOST_PASSWORD=${DJANGO_EMAIL_HOST_PASSWORD}
-    expose:
-      - 8080
-    command: daphne -b 0.0.0.0 -p 8080 config.asgi:application
-{% endif %}
-  django:
+    container_name: daphne
     restart: always
     build:
-      context: .
-      dockerfile: ./server/Dockerfile
+      context: ./server/
+      dockerfile: Dockerfile
       args:
         MODE: "--without dev"
     depends_on:
       - postgres
       - redis
+    expose:
+      - 8080
+    volumes:
+      - ./logs/:/server/logs/
     environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
       - REDIS_URL=${REDIS_URL}
@@ -56,64 +43,96 @@ services:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DJANGO_EMAIL_HOST_USER=${DJANGO_EMAIL_HOST_USER}
       - DJANGO_EMAIL_HOST_PASSWORD=${DJANGO_EMAIL_HOST_PASSWORD}
+    command: daphne -b 0.0.0.0 -p 8080 config.asgi:application --access-log ./logs/daphne.log -v 3
+{% endif %}
+  django:
+    container_name: django
+    restart: always
+    build:
+      context: ./server/
+      dockerfile: Dockerfile
+      args:
+        MODE: "--without dev"
+    depends_on:
+      - postgres
+      - redis
     expose:
       - 8000
+    volumes:
+      - ./logs/:/server/logs/
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - REDIS_URL=${REDIS_URL}
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - DJANGO_ADMIN_URL=${DJANGO_ADMIN_URL}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_EMAIL_HOST_USER=${DJANGO_EMAIL_HOST_USER}
+      - DJANGO_EMAIL_HOST_PASSWORD=${DJANGO_EMAIL_HOST_PASSWORD}
     command: gunicorn config.wsgi -c ./config/gunicorn.py
 
   postgres:
-    restart: always
     image: postgres:14.4
+    container_name: postgres
+    restart: always
+    expose:
+      - ${POSTGRES_PORT}
     volumes:
       - postgres_data:/var/lib/postgresql/data/
       - ./dumps:/dumps
-    expose:
-      - 5432
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
 
   redis:
-    restart: always
     image: redis:6
+    container_name: redis
+    restart: always
     expose:
       - 6379
 {% if cookiecutter.celery != 'n' %}  
   celery_worker:
+    container_name: celery_worker
     restart: always
     build:
-      context: .
-      dockerfile: ./server/Dockerfile
+      context: ./server/
+      dockerfile: Dockerfile
       args:
         MODE: "--without dev"
-    command: celery --app=config worker --loglevel=INFO
     depends_on:
       - postgres
       - redis
+    volumes:
+      - ./logs/:/server/logs/
     environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
       - REDIS_URL=${REDIS_URL}
       - DJANGO_DEBUG=${DJANGO_DEBUG}
+    command: celery --app=config worker --loglevel=INFO -f ./logs/celery_worker.log
 
   celery_beat:
+    container_name: celery_beat
     restart: always
     build:
-      context: .
-      dockerfile: ./server/Dockerfile
+      context: ./server/
+      dockerfile: Dockerfile
       args:
         MODE: "--without dev"
-    command: celery --app=config beat --scheduler=django --loglevel=INFO
     depends_on:
       - postgres
       - redis
+    volumes:
+      - ./logs/:/server/logs/
     environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
       - REDIS_URL=${REDIS_URL}
       - DJANGO_DEBUG=${DJANGO_DEBUG}
+    command: celery --app=config beat --scheduler=django --loglevel=INFO -f ./logs/celery_beat.log
 {% endif %}
   postgres-backup:
-    restart: always
     image: rmiddle/pg_dump:latest
+    container_name: postgres-backup
+    restart: always
     links:
       - postgres
     environment:
@@ -126,3 +145,24 @@ services:
     volumes:
       - ./dumps:/dump
     command: dump-cron
+{% if cookiecutter.websockets != 'n' %}
+  alexandria:
+    image: raisultan/alexandria:0.1
+    container_name: alexandria
+    expose:
+      - 8080
+    volumes:
+      - ./docs/ws.yml:/ws.yml
+    environment:
+      - ALEXANDRIA_YAML=/ws.yml
+{% endif %}
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    expose:
+      - 5050
+    volumes:
+      - ./docs/openapi.yaml:/openapi.yaml
+    environment:
+      - SWAGGER_JSON=/openapi.yaml
+      - PORT=5050

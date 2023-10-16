@@ -33,27 +33,27 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip wheel setuptools invoke rich
-          invoke project.install-tools
-          invoke project.install-requirements
+          pip install --upgrade pip wheel setuptools poetry
+          cd server && poetry install
 
       - name: Run linters
-        run: inv linters.all
+        run: make linters
 
-  pytest:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v3
 
-      - name: Build the Stack
-        run:  docker-compose build
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10.5"
 
-      - name: Run DB Migrations
-        run:  docker-compose run --rm server python manage.py migrate
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip wheel setuptools poetry
+          cd server && poetry install
 
-      - name: Run Django Tests
-        run:  docker-compose run django pytest
-
-      - name: Tear down the Stack
-        run:  docker-compose down
+      - name: Run tests
+        run: make tests

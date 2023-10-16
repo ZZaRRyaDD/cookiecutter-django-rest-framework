@@ -1,0 +1,47 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+        "default": {
+            "format": "%(asctime)s - %(name)s - %(filename)s - %(lineno)d - %(levelname)s - %(message)s"
+        },
+        "access": {
+            "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        }
+    },
+    "handlers": {
+        "default": {
+            "formatter": "default",
+            "class": "logging.FileHandler",
+            "filename": "./logs/django.log"
+        },
+        "access": {
+            "formatter": "access",
+            "class": "logging.FileHandler",
+            "filename": "./logs/django.log"
+        }
+    },
+    "loggers": {
+        "gunicorn.error": {
+            "level": "INFO",
+            "handlers": [
+                "default"
+            ],
+            "propagate": "no"
+        },
+        "gunicorn.access": {
+            "level": "INFO",
+            "handlers": [
+                "access"
+            ],
+            "propagate": "no"
+        }
+    },
+    "root": {
+        "level": "DEBUG",
+        "handlers": [
+            "default"
+        ],
+        "propagate": "no"
+    }
+}

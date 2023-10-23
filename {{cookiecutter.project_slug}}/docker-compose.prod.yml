@@ -15,7 +15,6 @@ services:
       - swagger-ui
 {%- if cookiecutter.websockets != 'n' %}
       - daphne
-      - alexandria
 {%- endif %}
     ports:
       - 80:80
@@ -145,17 +144,7 @@ services:
     volumes:
       - ./dumps:/dump
     command: dump-cron
-{% if cookiecutter.websockets != 'n' %}
-  alexandria:
-    image: raisultan/alexandria:0.1
-    container_name: alexandria
-    expose:
-      - 8080
-    volumes:
-      - ./docs/ws.yml:/ws.yml
-    environment:
-      - ALEXANDRIA_YAML=/ws.yml
-{% endif %}
+
   swagger-ui:
     image: swaggerapi/swagger-ui
     container_name: swagger-ui

@@ -1,4 +1,6 @@
-from config.celery import app, schedules
+from celery import schedules
+
+from config.celery import app
 
 app.conf.beat_schedule = {
    'user_count': {

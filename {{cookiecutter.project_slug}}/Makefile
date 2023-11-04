@@ -79,10 +79,11 @@ open-db:  ##@Database Open database inside docker-image
 	docker exec -it postgres psql -d $(POSTGRES_DB) -U $(POSTGRES_USER) -p $(POSTGRES_PORT)
 
 tests:  ##@Testing Test application with pytest
-	make docker-django-run pytest
+	make docker-django-run "pytest --verbosity=2 --showlocals --log-level=DEBUG --full-trace"
 
 tests-cov:  ##@Testing Test application with pytest and create coverage report
-	make docker-django-run pytest "--verbosity=2 --showlocals --log-level=DEBUG --full-trace"
+	make docker-django-run "coverage run -m pytest --cov-config=setup.cfg" && \
+	make docker-django-run "coverage html"
 
 linters:  ##@Linters Run linters
 	make docker-django-run "isort . --settings-file=./setup.cfg"

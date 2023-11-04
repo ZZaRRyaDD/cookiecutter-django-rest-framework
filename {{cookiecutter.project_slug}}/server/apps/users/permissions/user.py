@@ -9,4 +9,4 @@ class UserPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj) -> bool:
         if request.method == "PATCH":
             return request.user.id == obj.id
-        return False
+        return True

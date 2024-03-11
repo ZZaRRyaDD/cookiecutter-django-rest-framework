@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 
-from apps.core.services.pagination import PaginationObject
+from apps.core.utils import PaginationObject
 
 
 class BaseViewSet(viewsets.ModelViewSet):

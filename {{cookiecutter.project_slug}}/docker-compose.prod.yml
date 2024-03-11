@@ -128,22 +128,6 @@ services:
       - DJANGO_DEBUG=${DJANGO_DEBUG}
     command: celery --app=config beat --scheduler=django --loglevel=INFO -f ./logs/celery_beat.log
 {% endif %}
-  postgres-backup:
-    image: rmiddle/pg_dump:latest
-    container_name: postgres-backup
-    restart: always
-    links:
-      - postgres
-    environment:
-      - PGUSER=${POSTGRES_USER}
-      - PGPASSWORD=${POSTGRES_PASSWORD}
-      - PGDB=${POSTGRES_DB}
-      - PGHOST=${POSTGRES_HOST}
-      - CRON_SCHEDULE=0 0 * * 0
-      - DELETE_OLDER_THAN=1
-    volumes:
-      - ./dumps:/dump
-    command: dump-cron
 
   swagger-ui:
     image: swaggerapi/swagger-ui

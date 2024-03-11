@@ -1,0 +1,69 @@
+upstream localhost {
+    server django:8000;
+}
+{%- if cookiecutter.websockets != 'n' %}
+upstream websocket {
+    server daphne:8080;
+}
+{%- endif %}
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    location /favicon.ico {
+        access_log     off;
+        log_not_found  off;
+    }
+
+    root /nginx;
+
+    location /static/ {
+        autoindex on;
+    }
+
+    location /media/ {
+        autoindex on;
+    }
+{% if cookiecutter.websockets != 'n' %}
+    location /ws/ {
+        proxy_pass http://websocket;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_redirect off;
+    }
+{% endif %}
+    location /swagger/ {
+        proxy_pass http://swagger-ui:5050/;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_redirect off;
+    }
+
+    location / {
+        proxy_pass http://localhost;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_redirect off;
+
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE';
+            add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'application/json; charset=utf-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+        if ($request_method = 'POST') {
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
+            add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range';
+        }
+        if ($request_method = 'GET') {
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
+            add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range';
+        }
+    }
+}

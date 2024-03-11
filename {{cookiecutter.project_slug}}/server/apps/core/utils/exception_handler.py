@@ -35,6 +35,4 @@ def custom_exception_handler(exc, context) -> response.Response | None:
     if response:
         if response.status_code == status.HTTP_400_BAD_REQUEST:
             response.data = {"detail": get_errors(response.data)}
-        else:
-            response.data = {"detail": response.data["detail"]}
     return response

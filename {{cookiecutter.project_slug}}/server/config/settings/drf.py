@@ -10,7 +10,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
-    "EXCEPTION_HANDLER": "apps.core.services.custom_exception_handler",
+    "EXCEPTION_HANDLER": "apps.core.utils.custom_exception_handler",
 }
 
 if cors_origins := os.getenv('CORS_ALLOWED_ORIGINS'):

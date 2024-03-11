@@ -43,12 +43,12 @@ def main():
     set_variable(
         f"{generate_value()}/\n",
         "SET_DJANGO_ADMIN_URL",
-        path="./.env",
+        path="./.env.example",
     )
     set_variable(
         f"{generate_value()}\n",
         "SET_DJANGO_SECRET_KEY",
-        path="./.env",
+        path="./.env.example",
     )
 
 

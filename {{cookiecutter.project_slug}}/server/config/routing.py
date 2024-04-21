@@ -6,7 +6,7 @@ from django.core.asgi import get_asgi_application
 from apps.chat.routing import chat_websocket_urlpatterns
 from apps.core.middleware import JWTQueryParamAuthMiddleware
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.development')
 
 websocket_urlpatterns = chat_websocket_urlpatterns
 

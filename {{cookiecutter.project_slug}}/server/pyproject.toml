@@ -27,6 +27,7 @@ djangorestframework-simplejwt = "4.8.0"
 channels = {extras = ["daphne"], version = "4.0.0"}
 channels-redis = "4.1.0"
 {%- endif %}
+uvicorn = "^0.18.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "7.3.1"

@@ -34,14 +34,9 @@ services:
       - 8080
     volumes:
       - ./logs/:/server/logs/
-    environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-      - REDIS_URL=${REDIS_URL}
-      - DJANGO_DEBUG=${DJANGO_DEBUG}
-      - DJANGO_ADMIN_URL=${DJANGO_ADMIN_URL}
-      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-      - DJANGO_EMAIL_HOST_USER=${DJANGO_EMAIL_HOST_USER}
-      - DJANGO_EMAIL_HOST_PASSWORD=${DJANGO_EMAIL_HOST_PASSWORD}
+    env_file:
+      - ./.envs/django.env
+      - ./.envs/celery.env
     command: daphne -b 0.0.0.0 -p 8080 config.asgi:application --access-log ./logs/daphne.log -v 3
 {% endif %}
   django:
@@ -59,14 +54,9 @@ services:
       - 8000
     volumes:
       - ./logs/:/server/logs/
-    environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-      - REDIS_URL=${REDIS_URL}
-      - DJANGO_DEBUG=${DJANGO_DEBUG}
-      - DJANGO_ADMIN_URL=${DJANGO_ADMIN_URL}
-      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-      - DJANGO_EMAIL_HOST_USER=${DJANGO_EMAIL_HOST_USER}
-      - DJANGO_EMAIL_HOST_PASSWORD=${DJANGO_EMAIL_HOST_PASSWORD}
+    env_file:
+      - ./.envs/django.env
+      - ./.envs/celery.env
     command: gunicorn config.wsgi -c ./config/gunicorn.py
 
   postgres:
@@ -78,10 +68,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
       - ./dumps:/dumps
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+    env_file:
+      - ./.envs/postgres.env
 
   redis:
     image: redis:6
@@ -103,10 +91,9 @@ services:
       - redis
     volumes:
       - ./logs/:/server/logs/
-    environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-      - REDIS_URL=${REDIS_URL}
-      - DJANGO_DEBUG=${DJANGO_DEBUG}
+    env_file:
+      - ./.envs/django.env
+      - ./.envs/celery.env
     command: celery --app=config worker --loglevel=INFO -f ./logs/celery_worker.log
 
   celery_beat:
@@ -122,13 +109,11 @@ services:
       - redis
     volumes:
       - ./logs/:/server/logs/
-    environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-      - REDIS_URL=${REDIS_URL}
-      - DJANGO_DEBUG=${DJANGO_DEBUG}
+    env_file:
+      - ./.envs/django.env
+      - ./.envs/celery.env
     command: celery --app=config beat --scheduler=django --loglevel=INFO -f ./logs/celery_beat.log
 {% endif %}
-
   swagger-ui:
     image: swaggerapi/swagger-ui
     container_name: swagger-ui

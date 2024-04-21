@@ -8,12 +8,12 @@ ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # GENERAL
 # ------------------------------------------------------------------------------
 APP_LABEL = "{{cookiecutter.project_name}}"
-DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
+DEBUG = os.environ.get("DJANGO_DEBUG", "false") == "true"
 SECRET_KEY = os.getenv(
     "DJANGO_SECRET_KEY",
     "vqBuvYRdQrAHdKY3bMyvV8wvuy6QaczedCQrmb58YVR3bjY8avnxFXNumWuqdb6s",
 )
-ALLOWED_HOSTS = ["*"]
+
 TIME_ZONE = "{{cookiecutter.timezone}}"
 LANGUAGE_CODE = "ru"
 SITE_ID = 1
@@ -26,20 +26,20 @@ WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = 'config.routing.application'
 {%- endif %}
 
+ALLOWED_HOSTS = ["*"]
+
 # DATABASES
 # ------------------------------------------------------------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 DATABASES = {'default': dj_database_url.config(conn_max_age=60)}
 
+REDIS_URL = os.getenv('REDIS_URL')
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.getenv("REDIS_URL"),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "IGNORE_EXCEPTIONS": True,
-        },
+        "LOCATION": REDIS_URL,
     }
 }
 {% if cookiecutter.websockets != 'n' %}
@@ -47,7 +47,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('redis', 6379)],
+            'hosts': [REDIS_URL],
         },
     },
 }

@@ -37,11 +37,10 @@ shell:  ##@ApplicationDev Run django shell
 	python manage.py shell
 
 tests:  ##@Testing Test application with pytest
-	pytest -n 3 --disable-pytest-warnings --verbosity=2 --showlocals --log-level=INFO --full-trace
+	pytest --disable-pytest-warnings --verbosity=2 --showlocals --log-level=INFO --full-trace
 
 tests-cov:  ##@Testing Test application with pytest and create coverage report
-	coverage run -m pytest --cov-config=setup.cfg
-	coverage html
+	pytest --disable-pytest-warnings --verbosity=2 --showlocals --log-level=INFO --full-trace --cov=. --cov-report html
 
 linters:  ##@Linters Run linters
 	isort . --settings-file=./setup.cfg

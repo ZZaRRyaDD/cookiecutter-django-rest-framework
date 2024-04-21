@@ -45,6 +45,9 @@ docker-downv:  ##@Application Stop application in docker and remove volumes
 docker-django-run:  ##@Application Run django container with command
 	docker-compose run --rm django $(args)
 
+docker-django-prod-run:  ##@Application Run django production container with command
+	docker-compose -f docker-compose.prod.yml run --rm django $(args)
+
 fill_sample_data:  ##@Application Run script for create sample data in db
 	make docker-django-run "make fill_sample_data"
 

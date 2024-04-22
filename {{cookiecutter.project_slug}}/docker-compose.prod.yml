@@ -113,6 +113,26 @@ services:
       - ./.envs/django.env
       - ./.envs/celery.env
     command: celery --app=config beat --scheduler=django --loglevel=INFO -f ./logs/celery_beat.log
+
+  flower:
+    container_name: flower
+    restart: always
+    build:
+      context: ./server/
+      dockerfile: Dockerfile
+      args:
+        MODE: "--without dev"
+    ports:
+      - "5555:5555"
+    env_file:
+      - ./.envs/django.env
+      - ./.envs/celery.env
+    depends_on:
+      - postgres
+      - redis
+      - celery_worker
+      - celery_beat
+    command: celery --app=config flower --url_prefix=flower
 {% endif %}
   swagger-ui:
     image: swaggerapi/swagger-ui

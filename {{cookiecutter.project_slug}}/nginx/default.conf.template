@@ -25,6 +25,14 @@ server {
     location /media/ {
         autoindex on;
     }
+{% if cookiecutter.celery != 'n' %}
+    location /flower/ {
+        proxy_pass http://flower:${FLOWER_PORT};
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_redirect off;
+    }
+{% endif %}
 {% if cookiecutter.websockets != 'n' %}
     location /ws/ {
         proxy_pass http://websocket;

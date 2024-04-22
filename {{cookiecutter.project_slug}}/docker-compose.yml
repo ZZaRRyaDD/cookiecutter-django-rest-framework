@@ -2,6 +2,7 @@ version: '3'
 
 volumes:
   postgres_data:
+  redis_data:
 
 services:
   django:
@@ -43,6 +44,8 @@ services:
     restart: always
     expose:
       - 6379
+    volumes:
+      - redis_data:/data
 {% if cookiecutter.celery != 'n' %}  
   celery_worker:
     container_name: celery_worker

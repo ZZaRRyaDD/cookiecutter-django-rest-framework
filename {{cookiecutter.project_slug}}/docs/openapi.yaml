@@ -50,7 +50,7 @@ paths:
         "200":
           $ref: "#/components/responses/User200"
         "401":
-          description: "Unauthorized"
+          $ref: "#/components/responses/Unauthorized401"
 
   "/api/users/":
     get:
@@ -61,7 +61,7 @@ paths:
         "200":
           $ref: "#/components/responses/UserList200"
         "401":
-          description: "Unauthorized"
+          $ref: "#/components/responses/Unauthorized401"
 
     post:
       tags:
@@ -92,7 +92,7 @@ paths:
         "200":
           $ref: "#/components/responses/User200"
         "401":
-          description: "Unauthorized"
+          $ref: "#/components/responses/Unauthorized401"
 
     patch:
       tags:
@@ -114,9 +114,9 @@ paths:
         "400":
           $ref: "#/components/responses/User400"
         "401":
-          description: "Unauthorized"
+          $ref: "#/components/responses/Unauthorized401"
         "403":
-          description: "Forbidden"
+          $ref: "#/components/responses/Forbidden403"
 
 components:
   securitySchemes:
@@ -252,3 +252,52 @@ components:
               code:
                 type: string
                 example: "token_not_valid"
+
+    BadRequest400:
+      description: "BadRequest"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                    message:
+                      type: array
+                      items:
+                        type: string
+
+    Unauthorized401:
+      description: "Unauthorized"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+    
+    Forbidden403:
+      description: "Forbidden"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+
+    NotFound404:
+      description: "NotFound"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
